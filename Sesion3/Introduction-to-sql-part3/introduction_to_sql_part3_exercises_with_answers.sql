@@ -170,11 +170,15 @@ SELECT MAX(salary), emp_no FROM salaries
 -- Which department has the lowest total salary?
 
 -- Answer:
+
+-- total salary cost in each department --> sum
 SELECT SUM(s.salary) as salary_department, de.dept_no, d.dept_name 
 FROM dept_emp AS de, departments AS d, salaries AS s
-WHERE s.emp_no = de.emp_no  and d.dept_no = de.dept_no GROUP BY de.dept_no
+-- lowest total salary
+WHERE s.emp_no = de.emp_no  and d.dept_no = de.dept_no 
+GROUP BY de.dept_no
 ORDER BY salary_department;
--- Human Resources
+
 
 
 
