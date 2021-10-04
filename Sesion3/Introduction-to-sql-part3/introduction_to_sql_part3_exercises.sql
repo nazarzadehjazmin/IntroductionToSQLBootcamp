@@ -155,6 +155,15 @@ AS highest_paid  FROM salaries;
 -- where the department has more than 1000 employees.
 
 -- Answer:
+USE employees;
+
+SELECT COUNT(*) AS employees_per_dept, dept_no 
+FROM dept_emp GROUP BY dept_no;
+
+SELECT COUNT(*) AS employees_per_dept, dept_no 
+FROM dept_emp GROUP BY dept_no 
+-- where the department has more than 1000 employees
+HAVING COUNT(*) > 1000;
 
 # ---------------------------------------------------------+
 # ---- Question 8 ----
@@ -162,6 +171,10 @@ AS highest_paid  FROM salaries;
 -- Arrange in ascending order.
 
 -- Answer:
+SELECT MAX(salary) AS max_salary, emp_no
+FROM salaries
+GROUP BY emp_no ORDER BY MAX(salary);
+
 
 # ---------------------------------------------------------+
 # ---- Question 9 ----
@@ -170,6 +183,10 @@ AS highest_paid  FROM salaries;
 -- Which department has the lowest total salary?
 
 -- Answer:
-
+SELECT SUM(s.salary) as salary_department, de.dept_no, d.dept_name 
+FROM dept_emp AS de, departments AS d, salaries AS s
+WHERE s.emp_no = de.emp_no  and d.dept_no = de.dept_no 
+GROUP BY de.dept_no
+ORDER BY salary_department;
 
 
