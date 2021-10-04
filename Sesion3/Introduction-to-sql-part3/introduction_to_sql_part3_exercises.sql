@@ -20,7 +20,11 @@
 -- Identify an appropriate joining attribute.
 
 -- Answer:
+USE employees;
 
+SELECT t.title, e.first_name, e.last_name         
+FROM titles AS t 
+INNER JOIN employees AS e ON t.emp_no = e.emp_no;
 
 # --------------------------------------------------+
 # --------Question 2 --------
@@ -30,6 +34,11 @@
 
 -- Answer:
 
+SELECT d.dept_no, e.first_name, e.last_name
+FROM dept_emp AS d
+LEFT JOIN employees AS e ON d.emp_no = e.emp_no 
+WHERE dept_no is NULL;
+
 
 # --------------------------------------------------+
 # --------Question 3 --------
@@ -38,7 +47,10 @@
 -- How many rows have null values?
 
 -- Answer:
-
+SELECT d.dept_no, e.first_name, e.last_name
+FROM dept_emp AS d
+RIGHT JOIN employees AS e ON d.emp_no = e.emp_no
+WHERE dept_no is NULL;
 
 # --------------------------------------------------+
 # --------Question 4 --------
@@ -46,6 +58,10 @@
 -- Join on the dept_no and emp_no. 
 
 -- Answer:
+SELECT e.first_name, d.dept_name
+FROM departments AS d, employees AS e, dept_emp AS de
+WHERE d.dept_no = de.dept_no AND e.emp_no = de.emp_no;
+-- A y C, B y C
 
 
 # --------------------------------------------------+
@@ -55,6 +71,11 @@
 -- Make sure that the same employee's name does not get displayed in both the employee_1 and employee_2 columns.
 
 -- Answer:
+SELECT  e1.emp_no AS employee_one, e2.emp_no AS employee_two, d.dept_no
+FROM dept_emp AS e1, dept_emp AS e2, departments AS d
+WHERE e1.dept_no = e2.dept_no AND e1.dept_no = d.dept_no AND e1.emp_no != e2.emp_no;
+
+-- trabaje con "3" tablas --> A y C, B y C
 
 
 # --------Question 6 --------
@@ -62,6 +83,9 @@
 -- What is the number of rows returned?
 
 -- Answer:
+SELECT de.dept_no FROM dept_emp AS de
+UNION
+SELECT d.dept_no FROM departments AS d;
 
 
 
@@ -76,6 +100,9 @@
 -- Find all departments that have 'A' anywhere in the department name.
 
 -- Answer:
+USE employees;
+SELECT * FROM employees WHERE first_name LIKE '%a';
+SELECT * FROM departments WHERE dept_name LIKE '%A%';
 
 
 # ---------------------------------------------------------+
@@ -84,35 +111,41 @@
 -- Find the number of characters in the employees' first names. Name the column length_first_name
 
 -- Answer:
-
+SELECT first_name, LENGTH(first_name) AS 
+length_firstname FROM employees;
 
 # ---------------------------------------------------------+
 # ---- Question 3 ----
 -- Find the modulus of 10 of the salary of an employee.
 
 -- Answer:
-
+SELECT MOD(salary, 10) AS salary_modulus, salary FROM salaries;
 
 # ---------------------------------------------------------+
 # ---- Question 4 ----
 -- What will be the time exactly 76 hours, 39 minutes, and 10 seconds from now?
 
 -- Answer:
-
+SELECT CURRENT_TIMESTAMP() 
+AS time_now, 
+ADDTIME(CURRENT_TIMESTAMP(), "76:39:10") 
+AS new_time;
 
 # ---------------------------------------------------------+
 # ---- Question 5 ----
 -- What is the number of days between 9th September 2017 and 24th April 2019?
 
 -- Answer:
-
+SELECT DATEDIFF("2019-04-24", "2017-09-09") 
+AS date_difference;
 
 # ---------------------------------------------------------+
 # ---- Question 6 ----
 -- What is the salary of the highest paid employee in our employee database?
 
 -- Answer:
-
+SELECT MAX(salary) 
+AS highest_paid  FROM salaries;
 
 # ---------------------------------------------------------+
 # ---- Question 7 ----
