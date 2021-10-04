@@ -18,7 +18,16 @@
 -- Write the query as a nested non-correlated subquery.
 
 -- Answer:
+USE employees;
 
+SELECT first_name FROM employees
+-- selecciona los first_name de los empleados donde la hire_date sea tal
+WHERE hire_date = '1985-08-31' 
+OR
+-- o los first_name en (selecciona los first_name de los empleados donde la hire_date sea tal)
+first_name IN 
+(SELECT first_name FROM employees
+WHERE hire_date = '1985-09-01');
 
 # -------------------------------------------------------------+
 # ----- Question 2 -----
@@ -27,17 +36,25 @@
 -- Write the query as a nested non-correlated subquery.
 
 -- Answer:
-
+SELECT distinct emp_no FROM salaries
+WHERE salary > ALL 
+(SELECT salary FROM salaries WHERE emp_no = 10001);
 
 # -------------------------------------------------------------+
 # ----- Question 3 -----
--- Find the details of employees from dept_emp table ,
+-- Find the details of employees from dept_emp table,
 -- where the employee has worked in more than 1 department
 -- Write the query as a nested correlated subquery.
 
 -- Answer:
+-- Find the details of employees from dept_emp table
+SELECT * FROM dept_emp AS de1 WHERE
+-- where the employee has worked in more than 1 department
+-- tengo que contar en cuantos deptos esta cada empleado y mostrarlo si esta en mas de uno
+(SELECT COUNT(*) FROM dept_emp AS de2 WHERE
+de1.emp_no = de2.emp_no GROUP BY de2.emp_no) > 1;
 
-
+	
 # -----------------------------------------------------------+
 # ----- Question 4 -----
 -- Find the number of employees in each department.
@@ -46,6 +63,12 @@
 -- Use the departments table to find the name of the department.
 
 -- Answer:
+SELECT d.dept_no, d.dept_name, e.number_employees 
+FROM departments AS d
+INNER JOIN
+(SELECT dept_no, COUNT(*) AS number_employees FROM dept_emp
+GROUP BY dept_no) AS e
+ON d.dept_no = e.dept_no;
 
 
 
@@ -60,7 +83,13 @@
 -- Display the view.
 
 -- Answer:
+CREATE VIEW title_info(title, number_employees, mean_salary) AS        
+SELECT t.title, COUNT(e.emp_no), AVG(s.salary)        
+FROM titles AS t, employees AS e, salaries AS s          
+WHERE t.emp_no = e.emp_no AND e.emp_no = s.emp_no
+GROUP BY t.title;
 
+SELECT * FROM title_info;
 
 # -----------------------------------------------------------+
 # ----- Question 2 -----
@@ -70,14 +99,17 @@
 -- Why and why not?
 
 -- Answer:
-
+UPDATE title_info
+SET title = "Junior Engineer"
+WHERE title = "Engineer";
+-- not updatable --> GROUP BY 
 
 # -----------------------------------------------------------+
 # ----- Question 3 -----
 -- Drop the view.
 
 -- Answer:
-
+DROP VIEW title_info;
 
 # -----------------------------------------------------------+
 # ----- Question 4 -----
@@ -86,6 +118,11 @@
 -- Now delete the index.
 
 -- Answer:
+ALTER TABLE departments ADD INDEX dept_name_index(dept_name);
+
+SHOW INDEX FROM departments;
+
+ALTER TABLE departments DROP INDEX dept_name_index;
 
 
 # -----------------------------------------------------------+
@@ -104,7 +141,16 @@
 -- Check the project table to make sure only one row is added. 
 
 -- Answer:
+SET AUTOCOMMIT = 0;                                   
+START TRANSACTION;                                            
+SAVEPOINT my_savepoint;                                       
+INSERT INTO departments VALUES('d007', 'Sales'); 
+SAVEPOINT after_rows_addition_savepoint;                     
+INSERT INTO departments VALUES('d008', 'Research');
+ROLLBACK TO SAVEPOINT after_rows_addition_savepoint;    
+COMMIT;
 
+SELECT * FROM departments;
 
 #### Exercise 3 ####
 # =================================================-
@@ -115,6 +161,16 @@
 -- View all columns of all the tables of the employees database.
 
 -- Answer:
+SHOW DATABASES;
+
+SHOW TABLES FROM employees;
+
+SHOW COLUMNS FROM departments;
+SHOW COLUMNS FROM  dept_emp;
+SHOW COLUMNS FROM employees;
+SHOW COLUMNS FROM  salaries;
+SHOW COLUMNS FROM titles;
+
 
 
 # -----------------------------------------------------------+
@@ -124,4 +180,4 @@
 -- Call the stored procedure. 
 
 -- Answer:
-
+CALL Show_employee_details;

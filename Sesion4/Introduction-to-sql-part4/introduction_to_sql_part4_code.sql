@@ -12,6 +12,23 @@
 -- The outer query happens first and then the inner query comes next
 
 
+-- SUBQUERY = query inside a query
+
+-- CORRELATED SUBQUERY =
+-- EXISTS, NOT EXISTS 
+-- inner query (): executed more than once --> for each time the outer query is executed inner query will also execute --> !! this is the main difference 
+-- this difference happens because the inner query has some values from the outer query
+-- first --> the inner query is executed, then --> the outer query
+-- It is executed for each row of the outer query
+-- EXAMPLE:
+-- List down the employees whose salary is greater than avg of their department
+--
+
+
+-- NON CORRELATED SUBQUERY =
+-- IN, NOT IN, ALL, SOME, ANY
+
+
 #=================================================-
 -- NON-CORRELATED SUBQUERIES
 #=================================================-

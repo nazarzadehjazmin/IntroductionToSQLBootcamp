@@ -9,26 +9,11 @@
 ## NOTE: To run individual pieces of code, select the line of code and
 ##       press ctrl + enter for PCs or command + enter for Macs
 
--- NATURAL JOINS:
--- It's not a type of join, it's how we are joining two tables
--- Ejemplo: 
--- Tengo 2 tablas 
--- cliente: codigo, nombre, localidad_id
--- localidad: localidad_id, descripcion
--- Le hago un natural join:
-SELECT localidad.descripcion
-FROM cliente
-NATURAL JOIN localidad
-WHERE codigo = 1;
--- me trae de cliente: codigo, nombre, y en localidad_id la descripcion
--- el problema es si tengo mas de un nombre igual en la tabla, si las columnas para id de localidad tienen diferente nombre --> como no puede vincular ninguna columna, hace producto cartesiano, donde mezcla todas las filas de ambas tablas y va a dar como resultado varias filas mas
--- por esta razon se usa el join using 
-SELECT localidad.descripcion
-FROM cliente
-JOIN localidad USING (localidadid);
--- en caso de que tuviera por ej, en cliente: localidad_id y en localidad: localidadid
 
 
+#=================================================-
+-- OTHER INFO
+#=================================================-
 -- Many to many: use 2 joins
 
 -- Hash Join
@@ -77,6 +62,62 @@ INNER JOIN orders AS o ON cu.customer_id = o.customer_id;  -- perform inner join
                                                            -- specify joining attribute
 
 -- INNER JOIN = Returns records that have matching values in both the tables
+
+
+
+-- INNER JOINS
+#=================================================-
+
+-- An equi-join is used to match two columns from two tables using explicit operator =:
+-- Example:
+select *
+  from table T1, table2 T2
+  where T1.column_name1 = T2.column_name2
+  
+-- An inner join is used to get the cross product between two tables, combining all records from both tables. 
+-- To get the right result you can use a:
+-- equi-join or 
+-- one natural join (same column names between tables)
+
+-- Using equi-join (explicit and implicit)
+
+select *
+  from table T1 INNER JOIN table2 T2
+  on T1.column_name = T2.column_name
+
+select *
+  from table T1, table2 T2
+  where T1.column_name = T2.column_name
+
+-- Or Using natural join
+
+select * 
+  from table T1 NATURAL JOIN table2 T2
+
+
+-- NATURAL JOINS:
+#=================================================-
+-- It's how we are joining two tables
+-- Ejemplo: 
+-- Tengo 2 tablas 
+-- cliente: codigo, nombre, localidad_id
+-- localidad: localidad_id, descripcion
+-- Le hago un natural join:
+SELECT localidad.descripcion
+FROM cliente
+NATURAL JOIN localidad
+WHERE codigo = 1;
+-- me trae de cliente: codigo, nombre, y en localidad_id la descripcion
+-- el problema es si tengo mas de un nombre igual en la tabla, si las columnas para id de localidad tienen diferente nombre --> como no puede vincular ninguna columna, hace producto cartesiano, donde mezcla todas las filas de ambas tablas y va a dar como resultado varias filas mas
+-- por esta razon se usa el join using 
+SELECT localidad.descripcion
+FROM cliente
+JOIN localidad USING (localidadid);
+-- en caso de que tuviera por ej, en cliente: localidad_id y en localidad: localidadid
+
+
+
+
 
 #=================================================-
 #### Slide 9: LEFT OUTER JOIN  ####
@@ -161,7 +202,7 @@ c2.Name as city_2, c2.CountryCode as country_2           -- city 2 details
 FROM city c1 INNER JOIN city c2                          -- self join statement
 ON c1.CountryCode != c2.CountryCode;                     -- non equi join using !=
 
--- it's a self join
+-- it's a inner join = equi
 
 
 #=================================================-
@@ -354,6 +395,12 @@ SELECT MAX(GNPOld - GNP) from country;
 SELECT MIN(population) AS least_population, countrycode FROM city -- select attributes
 GROUP BY CountryCode;                                             -- group by countrycode
 
+-- Agrupa por CountryCode, por ende, aparece una columna de CountryCode
+-- summarizing data from the database
+-- is used to group rows that have the same values
+-- with aggregate functions such as SUM, AVG, MAX, MIN, and COUNT. 
+-- The aggregate function that appears in the SELECT clause provides the information of each group
+-- https://www.mysqltutorial.org/mysql-group-by.aspx
 
 #=================================================-
 #### Slide 43: GROUP BY - multi column grouping  ####
