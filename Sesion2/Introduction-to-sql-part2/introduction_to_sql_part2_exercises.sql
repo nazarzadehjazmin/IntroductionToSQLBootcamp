@@ -34,7 +34,30 @@
 -- Inspect the table structures.
 
 -- Answer:
+USE company;
 
+CREATE TABLE Department
+(  
+dept_id int(3),          
+dept_name varchar(20),    
+dept_phone varchar(15),   
+CONSTRAINT pk_dept PRIMARY KEY(dept_id)
+); 
+
+SELECT * FROM Department;
+
+CREATE TABLE Employee
+(   
+employee_id varchar(10),
+employee_name varchar(30),  
+employee_mail varchar(30), 
+dept_id int(3),             
+CONSTRAINT pk_emp PRIMARY KEY(employee_id), 
+CONSTRAINT fk_dep FOREIGN KEY(dept_id) 
+REFERENCES Department(dept_id)         
+);
+
+SELECT * FROM Employee;
 
 # ------------------------------------------------+
 
@@ -46,6 +69,13 @@
 
 -- Answer:
 
+INSERT INTO Department(dept_id, dept_name, dept_phone)
+	VALUES(101, "SAP", 3335641023);
+ 
+INSERT INTO Department(dept_id, dept_name, dept_phone)
+	VALUES(103, "BA", 2233456244);
+
+SELECT * FROM Department;
 
 # ------------------------------------------------+
 # -------- Question 3 --------
@@ -58,6 +88,16 @@
 
 -- Answer:
 
+INSERT INTO Employee(employee_id, employee_name, employee_mail, dept_id)
+VALUES("SAP2343", "Andrew", "andrew@abc.com", 101);
+
+INSERT INTO Employee(employee_id, employee_name, employee_mail, dept_id)
+VALUES("BA5324", "Jennie", "jennie@abc.com", 103);
+    
+INSERT INTO Employee(employee_id, employee_name, employee_mail, dept_id)
+VALUES("BA6765", "Rashmi", "rashmi@abc.com", 103);
+    
+SELECT * FROM Employee;
 
 # ------------------------------------------------+
 # -------- Question 4 --------
@@ -70,7 +110,15 @@
 -- why or why not?
 
 -- Answer:
+INSERT INTO Employee(employee_id, employee_name, employee_mail, dept_id)
+VALUES("SAP2453", "Andrea", "andrea@abc.com", 104);
+    
+SELECT * FROM Employee;
 
+INSERT INTO Department(dept_id, dept_name, dept_phone)
+VALUES("abc34", "MS&S", 3335900023);
+
+SELECT * FROM Department;
 
 # ------------------------------------------------+
 # -------- Question 5 --------
@@ -80,7 +128,13 @@
 -- Check the table after updating it.
 
 -- Answer:
+SELECT * from Department;
 
+UPDATE Department
+SET dept_name = "SAP ERP" 
+where dept_id = 101;      
+
+SELECT * from Department; 
 
 # ------------------------------------------------+
 # -------- Question 6 --------
@@ -92,7 +146,20 @@
 -- Show the columns in the Employee table to check the final result.
 
 -- Answer:
+ALTER TABLE Employee    
+ADD emp_phone int(10); 
 
+SELECT * from Employee; 
+
+ALTER TABLE Employee
+MODIFY emp_phone varchar(15); 
+
+SELECT * from Employee; 
+
+ALTER TABLE Employee 
+DROP COLUMN emp_phone; 
+
+SELECT * from Employee; 
 
 # ------------------------------------------------+
 # -------- Question 7 --------
@@ -102,7 +169,16 @@
 
 -- Answer:
 
+DELETE FROM Employee 
+WHERE dept_id = 103; 
 
+DELETE FROM Department 
+WHERE dept_id = 103; 
+
+DELETE FROM Employee; 
+
+DROP TABLE Employee; 
+DROP TABLE Department;
 
 
 #### Exercise 2 ####
@@ -119,7 +195,10 @@
 -- Inspect the schema of the tables in the employee database.
 
 -- Answer:
-
+USE employees; 
+SELECT * from Employee; 
+SELECT * from departments; 
+SELECT * from titles; 
 
 # --------------------------------------------------+
 # --------Question 2 --------
@@ -127,21 +206,24 @@
 -- Alias the table as 'dep'.
 
 -- Answer:
-
+SELECT DISTINCT dep.dept_name 
+FROM departments AS dep;
 
 # --------------------------------------------------+
 # --------Question 3 --------
 -- Select emp_no, first_name as 'Name' and all in uppercase from the Employee table.
 
 -- Answer:
-
+SELECT emp_no, UPPER(first_name) AS Name
+FROM employees;
 
 # --------------------------------------------------+
 # --------Question 4 --------
 -- Display all the data of employees whose dept_no is d007.
 
 -- Answer:
-
+SELECT * FROM dept_emp 
+WHERE dept_no = 'd007';
 
 # --------------------------------------------------+
 # --------Question 5 --------
@@ -149,13 +231,15 @@
 -- 10001, 10005, 10007.
 
 -- Answer:
-
+SELECT * FROM titles 
+WHERE emp_no IN (10001, 10005, 10007); 
 
 # --------------------------------------------------+
 # --------Question 6 --------
 -- Display all the data from salaries tables where the salary of the employee is between 60000 and 70000.
 -- Answer:
-
+SELECT * FROM salaries 
+WHERE salary BETWEEN 60000 and 70000;
 
 # --------------------------------------------------+
 # --------Question 7 --------
@@ -163,6 +247,7 @@
 -- Retrieve the emp_no of the highest paid employee.
 
 -- Answer:
-
+SELECT * FROM salaries 
+ORDER BY salary DESC; 
 
 
